@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 3 
+void getKeyMatrix(int keyMatrix[N][N], char key[]) {
+    int k = 0;
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < N; j++)
+            keyMatrix[i][j] = key[k++] % 26;
+}
+void encrypt(int cipherMatrix[N][1], int keyMatrix[N][N], int messageVector[N][1]) {
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < 1; j++) {
+            cipherMatrix[i][j] = 0;
+            for (int x = 0; x < N; x++) {
+                cipherMatrix[i][j] += keyMatrix[i][x] * messageVector[x][j];
+            }
+            cipherMatrix[i][j] %= 26;
+        }
+    }
+}
+void HillCipher(char message[], char key[]) {
+    int keyMatrix[N][N];
+    getKeyMatrix(keyMatrix, key);
+
+    int messageVector[N][1];
+
+    for (int i = 0; i < N; i++) {
+        messageVector[i][0] = (message[i] - 'A') % 26;
+    }
+
+    int cipherMatrix[N][1];
+    encrypt(cipherMatrix, keyMatrix, messageVector);
+
+    char cipher[N];
+    for (int i = 0; i < N; i++) {
+        cipher[i] = cipherMatrix[i][0] + 'A';
+    }
+    printf("Encrypted Message: ");
+    for (int i = 0; i < N; i++) {
+        printf("%c", cipher[i]);
+    }
+    printf("\n");
+}
+int main() {
+    char message[N] = "ACT"; 
+    char key[N*N] = "GYBNQKURP"; 
+
+    HillCipher(message, key);
+    return 0;
+}
